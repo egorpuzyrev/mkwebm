@@ -23,60 +23,67 @@
                 return true
             }
 
-            function update_image_size()
-            {
-                var image_file = document.getElementById("image_file").files[0]
-                var image_size = image_file.size/1024
-                document.getElementById("image_size_label").textContent = image_size
-            }
-
-            function update_audio_size()
-            {
-                var audio_file = document.getElementById("audio_file").files[0]
-                var audio_size = audio_file.size/1024
-                document.getElementById("audio_size_label").textContent = audio_size
-            }
-
             function update_size()
             {
                 var image_file = document.getElementById("image_file").files[0]
                 if(image_file)
                 {
-                    var image_size = (image_file.size/1024).toFixed(1)
+                    var image_size = image_file.size/1024
                 }
                 else
                 {
                     var image_size = 0
                 }
 
-                document.getElementById("image_size_label").textContent = image_size
+                document.getElementById("image_size_label").textContent = image_size.toFixed(1)
 
 
                 var audio_file = document.getElementById("audio_file").files[0]
                 if(audio_file)
                 {
-                    var audio_size = (audio_file.size/1024).toFixed(1)
+                    var audio_size = audio_file.size/1024
                 }
                 else
                 {
                     var audio_size = 0
                 }
 
-                document.getElementById("audio_size_label").textContent = audio_size
+                document.getElementById("audio_size_label").textContent = audio_size.toFixed(1)
 
+                var total_size = image_size + audio_size
 
-                document.getElementById("total_size_label").textContent = (image_size + audio_size).toFixed(1)
+                document.getElementById("total_size_label").textContent = total_size.toFixed(1)
+
+                if(total_size>20480)
+                {
+                    document.getElementById("total_size_label").style.color = 'red'
+                } else
+                {
+                    document.getElementById("total_size_label").style.color = 'black'
+                }
             }
 
         </script>
     </head>
 
     <body>
-        <p><b> Суммарный объём двух файлов - 20480 Кб </b></p>
+        <p><b> Суммарный объём двух файлов не более 20480 Кб </b></p>
         <form method="POST" enctype="multipart/form-data" action="/mkwebm" name="upload" onsubmit="check_form()">
-            <p> Image file: <input type="file" name="image_file" id="image_file" onchange="update_size()"> <span id="image_size_label">0</span> Kb </p>
-            <p> Audio file: <input type="file" name="audio_file" id="audio_file" onchange="update_size()"> <span id="audio_size_label">0</span> Kb </p>
-            <p> Total size: <span id="total_size_label">0</span> Kb  </p>
+            <table>
+                <tr>
+                    <td> <p> Image file: <input type="file" name="image_file" id="image_file" onchange="update_size()"></p> </td>
+                    <td align="right"> <p> <span id="image_size_label">0</span> Kb </p> </td>
+                </tr>
+                <tr>
+                    <td> <p> Audio file: <input type="file" name="audio_file" id="audio_file" onchange="update_size()"></p> </td>
+                    <td align="right"> <p> <span id="audio_size_label">0</span> Kb </p> </td>
+                </tr>
+                <tr>
+                    <td> <p> Video width (1-800): <input type="number" min=1 max=800 style="width: 50px" name="image_width" id="image_width"> px </p> </td>
+                    <td align="right"> <p> Total size: <span id="total_size_label">0</span> Kb </p> </td>
+                </tr>
+            </table>
+
             <input type="submit" value="Send">
         </form>
     </body>

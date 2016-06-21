@@ -60,7 +60,7 @@ def mkwebm():
 
     params = request.params
 
-    size_x = SIZE_X
+    size_x = request.params.image_width or SIZE_X
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
 
