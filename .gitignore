@@ -1,0 +1,7 @@
+*.pyc
+*.pyo
+.fuse*
+*.log*
+*.webm*
+*.mp4*
+*.mp3*
