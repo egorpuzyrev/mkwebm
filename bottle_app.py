@@ -14,6 +14,9 @@ from bottle import default_app, route, get, post, static_file, request, view
 # ~PATH = os.path.abspath(os.environ.get('OPENSHIFT_HOMEDIR', '.'))
 # ~PATH = os.path.abspath(os.path.join(VIRTENV))
 PATH = os.path.abspath(os.environ.get('OPENSHIFT_REPO_DIR', '.'))
+
+bottle.TEMPLATE_PATH.insert(0, os.path.join(PATH, 'views'))
+
 FFMPEG_DIR = os.path.abspath('./ffmpeg/')
 
 sys.path.append(FFMPEG_DIR)
