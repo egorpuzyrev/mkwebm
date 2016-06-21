@@ -6,7 +6,7 @@ import tempfile
 import shlex
 import subprocess
 
-# A very simple Bottle Hello World app for you to get started with...
+import bottle
 from bottle import default_app, route, get, post, static_file, request, view
 
 # ~VIRTENV = os.environ.get('OPENSHIFT_PYTHON_DIR', '.') + '/virtenv/'
