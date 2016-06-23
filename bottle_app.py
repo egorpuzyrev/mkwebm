@@ -84,10 +84,11 @@ def mkwebm():
     command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
-    # ~res = subprocess.check_output(args)
-    # ~print('ffmpeg output:\n',res, file=sys.stderr)
-    proc = subprocess.Popen(args)
-    proc.wait()
+    res = subprocess.check_output(args)
+    print('ffmpeg output:\n',res)
+    print('ffmpeg output:\n',res, file=sys.stderr)
+    # ~proc = subprocess.Popen(args)
+    # ~proc.wait()
 
     basename = os.path.basename(output_tmp_file_path)
     # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
