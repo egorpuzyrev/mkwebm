@@ -91,7 +91,7 @@ def mkwebm():
 
     basename = os.path.basename(output_tmp_file_path)
 
-    output_file_path = os.path.join(WEMB_CACHE_DIR, basename)
+    output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
 
     command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
     args = shlex.split(command)
