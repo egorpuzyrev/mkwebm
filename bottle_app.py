@@ -81,7 +81,23 @@ def mkwebm():
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
-    command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
+    # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
+    command = """ ffmpeg  -hide_banner \
+        -loop 1 -i "{}" \
+        -i "{}" \
+        -shortest \
+        -c:v libvpx-vp9 \
+        -c:a libopus \
+        -threads 0 \
+        -crf 33 -speed 2 \
+        -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
+        -b:v 0 \
+        -vf "scale={}:trunc(ow/a/2)*2" \
+        -pix_fmt +yuv420p \
+        -f webm \
+        -y \
+        "{}"
+    """.format(image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
     res = subprocess.check_output(args)
