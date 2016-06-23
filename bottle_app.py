@@ -26,7 +26,7 @@ FFMPEG_BIN = os.path.join(FFMPEG_DIR, 'ffmpeg')
 FFPROBE_BIN = os.path.join(FFMPEG_DIR, 'ffprobe')
 MK_SH = os.path.join(FFMPEG_DIR, 'mk.sh')
 TMP_DIR = '/tmp'
-WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/wembs/')
+WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
 
 
