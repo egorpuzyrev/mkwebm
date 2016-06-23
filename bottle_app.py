@@ -86,7 +86,10 @@ def mkwebm():
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
 
+    print('ffmpeg output:\n',res, file=sys.stderr)
+
     basename = os.path.basename(output_file_path)
+    print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
     return static_file(basename, root=TMP_DIR)
     # ~return "<html><body>{}</body></html>".format(command)
