@@ -94,9 +94,8 @@ def mkwebm():
     # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
     # ~command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
     # ~args = shlex.split(command)
-
-    proc = subprocess.Popen(args)
-    proc.wait()
+    # ~proc = subprocess.Popen(args)
+    # ~proc.wait()
 
     # ~print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
