@@ -65,7 +65,7 @@ def mkwebm():
 
     # ~params = request.params
 
-    size_x = request.params.image_width or SIZE_X
+    size_x = request.params.get('image_width') or SIZE_X
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
 
@@ -101,8 +101,8 @@ def mkwebm():
     args = shlex.split(command)
 
     res = subprocess.check_output(args)
-    print('ffmpeg output:\n',res, file=sys.stderr)
-    print('ffmpeg output:\n',res, file=sys.stderr)
+    # ~print('ffmpeg output:\n',res, file=sys.stderr)
+    # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
 
