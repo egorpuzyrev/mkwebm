@@ -81,7 +81,7 @@ def mkwebm():
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
-    command = '{} "{}" "{}" {} "{}" > {}/ffmpeg.log'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path, DATA_DIR)
+    command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
     # ~res = subprocess.check_output(args)
