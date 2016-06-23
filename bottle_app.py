@@ -7,7 +7,7 @@ import shlex
 import subprocess
 
 import bottle
-from bottle import default_app, route, get, post, static_file, request, view
+from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect
 
 # ~VIRTENV = os.environ.get('OPENSHIFT_PYTHON_DIR', '.') + '/virtenv/'
 # ~virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
@@ -101,8 +101,23 @@ def mkwebm():
 
     print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
-    return static_file(basename, root=WEBM_CACHE_DIR)
+    # ~return static_file(basename, root=WEBM_CACHE_DIR)
     # ~return "<html><body>{}</body></html>".format(command)
     # ~return "<html><body>{}</body></html>".format(res)
+    # ~return '<link href="{}" type="video/webm"/>'.format(url('webms', filename=basename))
+    # ~return '/webms/{}'.format(basename)
+    print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
+    # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
+    redirect('/webms/{}'.format(basename))
+
+@route('/dashboard')
+@view('secure_page')
+def show__page_dashboard():
+    return dict(page='Dashboard', url=url)
+
+@route('/webms/<filename:path>', name='webms')
+def give_webm(filename):
+    print('webm given')
+    return static_file(filename, root=WEBM_CACHE_DIR)
 
 application = default_app()
