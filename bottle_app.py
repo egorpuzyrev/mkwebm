@@ -76,7 +76,7 @@ def mkwebm():
     audio_filename = audio_upload.filename
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
-    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
+    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
 
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
@@ -90,11 +90,9 @@ def mkwebm():
     proc.wait()
 
     basename = os.path.basename(output_tmp_file_path)
-
-    output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
-
-    command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
-    args = shlex.split(command)
+    # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
+    # ~command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
+    # ~args = shlex.split(command)
 
     proc = subprocess.Popen(args)
     proc.wait()
