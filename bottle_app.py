@@ -82,7 +82,7 @@ def mkwebm():
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
-    command = """ ffmpeg  -hide_banner \
+    command = """{} -hide_banner \
         -loop 1 -i "{}" \
         -i "{}" \
         -shortest \
@@ -97,7 +97,7 @@ def mkwebm():
         -f webm \
         -y \
         "{}"
-    """.format(image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
+    """.format(FFMPEG_BIN, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
     res = subprocess.check_output(args)
