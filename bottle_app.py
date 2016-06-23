@@ -14,6 +14,7 @@ from bottle import default_app, route, get, post, static_file, request, view
 # ~PATH = os.path.abspath(os.environ.get('OPENSHIFT_HOMEDIR', '.'))
 # ~PATH = os.path.abspath(os.path.join(VIRTENV))
 PATH = os.path.abspath(os.environ.get('OPENSHIFT_REPO_DIR', '.'))
+DATA_DIR = os.path.abspath(os.environ.get('OPENSHIFT_DATA_DIR', '.'))
 
 bottle.TEMPLATE_PATH.insert(0, os.path.join(PATH, 'views'))
 
@@ -25,6 +26,7 @@ FFMPEG_BIN = os.path.join(FFMPEG_DIR, 'ffmpeg')
 FFPROBE_BIN = os.path.join(FFMPEG_DIR, 'ffprobe')
 MK_SH = os.path.join(FFMPEG_DIR, 'mk.sh')
 TMP_DIR = '/tmp'
+WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/wembs/')
 SIZE_X = 400
 
 
@@ -74,21 +76,29 @@ def mkwebm():
     audio_filename = audio_upload.filename
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
-    _, output_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
+    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
 
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
-    command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_file_path)
+    command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
-    res = subprocess.check_output(args)
-    # ~proc = subprocess.Popen(args)
-    # ~proc.wait()
+    # ~res = subprocess.check_output(args)
+    # ~print('ffmpeg output:\n',res, file=sys.stderr)
+    proc = subprocess.Popen(args)
+    proc.wait()
 
-    print('ffmpeg output:\n',res, file=sys.stderr)
+    basename = os.path.basename(output_tmp_file_path)
 
-    basename = os.path.basename(output_file_path)
+    output_file_path = os.path.join(WEMB_CACHE_DIR, basename)
+
+    command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
+    args = shlex.split(command)
+
+    proc = subprocess.Popen(args)
+    proc.wait()
+
     print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
     return static_file(basename, root=TMP_DIR)
