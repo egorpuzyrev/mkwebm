@@ -17,7 +17,7 @@ PATH = os.path.abspath(os.environ.get('OPENSHIFT_REPO_DIR', '.'))
 
 bottle.TEMPLATE_PATH.insert(0, os.path.join(PATH, 'views'))
 
-FFMPEG_DIR = os.path.abspath('./ffmpeg/')
+FFMPEG_DIR = os.path.join(PATH, 'ffmpeg/')
 
 sys.path.append(FFMPEG_DIR)
 
