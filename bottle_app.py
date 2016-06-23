@@ -63,7 +63,7 @@ def index():
 # ~@view('mkwebm')
 def mkwebm():
 
-    params = request.params
+    # ~params = request.params
 
     size_x = request.params.image_width or SIZE_X
     image_upload = request.files.get('image_file')
@@ -85,7 +85,7 @@ def mkwebm():
     args = shlex.split(command)
 
     res = subprocess.check_output(args)
-    print('ffmpeg output:\n',res)
+    print('ffmpeg output:\n',res, file=sys.stderr)
     print('ffmpeg output:\n',res, file=sys.stderr)
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
