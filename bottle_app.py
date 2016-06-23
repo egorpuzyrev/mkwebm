@@ -101,9 +101,8 @@ def mkwebm():
 
     print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
-    return static_file(basename, root=TMP_DIR)
+    return static_file(basename, root=WEBM_CACHE_DIR)
     # ~return "<html><body>{}</body></html>".format(command)
     # ~return "<html><body>{}</body></html>".format(res)
-
 
 application = default_app()
