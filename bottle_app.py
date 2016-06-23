@@ -99,14 +99,14 @@ def mkwebm():
     proc = subprocess.Popen(args)
     proc.wait()
 
-    print('basename:\n', basename, file=sys.stderr)
+    # ~print('basename:\n', basename, file=sys.stderr)
     # ~return dict()
     # ~return static_file(basename, root=WEBM_CACHE_DIR)
     # ~return "<html><body>{}</body></html>".format(command)
     # ~return "<html><body>{}</body></html>".format(res)
     # ~return '<link href="{}" type="video/webm"/>'.format(url('webms', filename=basename))
     # ~return '/webms/{}'.format(basename)
-    print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
+    # ~print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
     # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
     redirect('/webms/{}'.format(basename))
 
@@ -117,7 +117,7 @@ def show__page_dashboard():
 
 @route('/webms/<filename:path>', name='webms')
 def give_webm(filename):
-    print('webm given')
+    print('webm given', os.path.join(WEBM_CACHE_DIR, filename))
     return static_file(filename, root=WEBM_CACHE_DIR)
 
 application = default_app()
