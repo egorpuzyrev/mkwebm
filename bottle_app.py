@@ -76,7 +76,9 @@ def get_params():
     # ~if not image_upload or not audio_upload:
         # ~return False
 
-    conv(size_x, image_upload, audio_upload)
+    # ~conv(size_x, image_upload, audio_upload)
+
+    return "<html><body>size_x: {} <br/> image_upload: <br/> audio_upload: <br/> </body></html>"
 
 # ~@route('/mkwebm2', method='POST')
 def conv(size_x, image_upload, audio_upload):
