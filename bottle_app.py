@@ -65,7 +65,11 @@ def mkwebm():
 
     # ~params = request.params
 
-    size_x = request.forms.get('image_width') or SIZE_X
+    # ~size_x = request.forms.get('image_width') or SIZE_X
+    try:
+        size_x = request.forms.get('image_width', SIZE_X)
+    except:
+        return template('<html><body>Error getting size_x</body></html>')
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
 
@@ -122,6 +126,7 @@ def mkwebm():
     # ~return '/webms/{}'.format(basename)
     # ~print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
     # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
+    print('redirecting to /webms/{}'.format(basename))
     redirect('/webms/{}'.format(basename))
 
 @route('/dashboard')
