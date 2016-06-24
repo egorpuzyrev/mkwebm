@@ -79,7 +79,7 @@
                     <td align="right"> <p> <span id="audio_size_label">0</span> Kb </p> </td>
                 </tr>
                 <tr>
-                    <td> <p> Video width (1-800): <input type="number" min=1 max=800 style="width: 50px" name="image_width" id="image_width"> px </p> </td>
+                    <td> <p> Video width (1-800): <input type="number" min=1 max=800 value=400 style="width: 50px" name="image_width" id="image_width"> px </p> </td>
                     <td align="right"> <p> Total size: <span id="total_size_label">0</span> Kb </p> </td>
                 </tr>
             </table>
