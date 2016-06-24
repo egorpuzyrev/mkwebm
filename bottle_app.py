@@ -61,7 +61,7 @@ def index():
 
 @route('/mkwebm', method="POST")
 # ~@view('mkwebm')
-def mkwebm():
+def get_params():
 
     # ~params = request.params
 
@@ -73,8 +73,13 @@ def mkwebm():
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
 
-    if not image_upload or not audio_upload:
-        return False
+    # ~if not image_upload or not audio_upload:
+        # ~return False
+
+    conv(size_x, image_upload, audio_upload)
+
+# ~@route('/mkwebm2', method='POST')
+def conv(size_x, image_upload, audio_upload):
 
     image_filename = image_upload.filename
     audio_filename = audio_upload.filename
