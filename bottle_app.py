@@ -78,11 +78,6 @@ def get_params():
 
     # ~conv(size_x, image_upload, audio_upload)
 
-    return "<html><body>size_x: {} <br/> image_upload: {}<br/> audio_upload: {}<br/> </body></html>"
-
-# ~@route('/mkwebm2', method='POST')
-def conv(size_x, image_upload, audio_upload):
-
     image_filename = image_upload.filename
     audio_filename = audio_upload.filename
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
