@@ -116,7 +116,7 @@ def get_params():
     with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
         for line in p.stdout:
             # ~print(line, end='')
-            yield line
+            yield str(line)+'<br/>'
 
 
     basename = os.path.basename(output_tmp_file_path)
