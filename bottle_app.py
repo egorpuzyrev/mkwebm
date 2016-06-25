@@ -137,7 +137,7 @@ def get_params():
     # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
     print('redirecting to /webms/{}'.format(basename))
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    redirect('/webms/{}'.format(basename), code=303)
+    # ~redirect('/webms/{}'.format(basename), code=303)
     give_webm(basename)
     # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
     # ~return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
