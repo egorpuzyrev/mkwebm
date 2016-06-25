@@ -106,11 +106,18 @@ def get_params():
     """.format(FFMPEG_BIN, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
-    res = subprocess.check_output(args)
+    # ~res = subprocess.check_output(args)
+
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
+
+    with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        for line in p.stdout:
+            # ~print(line, end='')
+            yield line
+
 
     basename = os.path.basename(output_tmp_file_path)
     # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
