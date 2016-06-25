@@ -7,7 +7,7 @@ import shlex
 import subprocess
 
 import bottle
-from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response
+from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request
 
 # ~VIRTENV = os.environ.get('OPENSHIFT_PYTHON_DIR', '.') + '/virtenv/'
 # ~virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
@@ -136,12 +136,15 @@ def get_params():
     # ~print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
     # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
     print('redirecting to /webms/{}'.format(basename))
-    response.set_header('Location', '/webms/{}'.format(basename))
+    # ~response.set_header('Location', '/webms/{}'.format(basename))
+    # ~request.set_header('Location', '/webms/{}'.format(basename))
+    # ~print(response.headers.__dict__)
+    # ~print(request.headers.__dict__)
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    redirect('/webms/{}'.format(basename), code=303)
+    # ~redirect('/webms/{}'.format(basename), code=303)
     # ~give_webm(basename)
     # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    # ~return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
+    return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
 
     # ~return {'url': '/webms/{}'.format(basename)}
 
