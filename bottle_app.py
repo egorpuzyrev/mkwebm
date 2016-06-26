@@ -110,13 +110,13 @@ def get_params():
 
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
-    # ~proc = subprocess.Popen(args)
-    # ~proc.wait()
+    proc = subprocess.Popen(args)
+    proc.wait()
 
-    with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-        for line in p.stdout:
+    # ~with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        # ~for line in p.stdout:
             # ~print(line, end='')
-            yield str(line)+'<br/>'
+            # ~yield str(line)+'<br/>'
 
 
     basename = os.path.basename(output_tmp_file_path)
