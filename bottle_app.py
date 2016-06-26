@@ -141,10 +141,13 @@ def get_params():
     # ~print(response.headers.__dict__)
     # ~print(request.headers.__dict__)
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    # ~redirect('/webms/{}'.format(basename), code=303)
+    response.status = 302
+    response.set_header('Location', '/webms/{}'.format(basename))
+    return response
+    # ~redirect('/webms/{}'.format(basename))  # , code=302)
     # ~give_webm(basename)
     # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
+    # ~return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
 
     # ~return {'url': '/webms/{}'.format(basename)}
 
