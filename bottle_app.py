@@ -83,7 +83,8 @@ def get_params():
     audio_filename = audio_upload.filename
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
-    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
+    # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
+    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
 
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
@@ -112,6 +113,12 @@ def get_params():
 
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
+    proc = subprocess.Popen(args)
+    proc.wait()
+
+    _, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
+    command = 'mv "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
+    args = shlex.split(command)
     proc = subprocess.Popen(args)
     proc.wait()
 
