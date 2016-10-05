@@ -7,6 +7,12 @@ import shlex
 import subprocess
 import glob
 
+import gevent
+from gevent import monkey
+from gevent.wsgi import WSGIServer
+
+monkey.patch_all()
+
 import bottle
 from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request, run
 
@@ -113,6 +119,7 @@ def get_params():
 
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
     # ~print('ffmpeg output:\n',res, file=sys.stderr)
+    # ~yield 'Start ffmpeg...'
     proc = subprocess.Popen(args)
     proc.wait()
 
@@ -180,5 +187,9 @@ def show_webms_list():
     webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.webm'))]
     return {'webms_list': webms_list}
 
+ip = os.environ.get('OPENSHIFT_PYTHON_IP', 'localhost')
+port = int(os.environ.get('OPENSHIFT_PYTHON_PORT', 8051))
+
 # ~run(reloader=True)
 application = default_app()
+application.run(host=ip, port=port, server='gevent', reloader=True)
