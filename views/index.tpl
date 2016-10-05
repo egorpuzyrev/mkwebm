@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="utf-8">
         <script>
             function check_form()
             {
@@ -86,5 +87,6 @@
 
             <input type="submit" value="Send">
         </form>
+        <p> <a href="/webmslist"> List of converted webms </a> </p>
     </body>
 </html>
