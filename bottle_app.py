@@ -152,10 +152,11 @@ def get_params():
     # ~print(request.headers.__dict__)
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
     # ~response.status = 302
-    # ~response.status = 302
-    # ~response.set_header('Location', '/webms/{}'.format(basename))
-    # ~return response
-    return static_file(basename, root=WEBM_CACHE_DIR)
+    response.status = 302
+    response.set_header('Location', '/webms/{}'.format(basename))
+    response.set_header('Method', 'GET')
+    return response
+    # ~return static_file(basename, root=WEBM_CACHE_DIR)
     # ~redirect('/webms/{}'.format(basename))  # , code=302)
     # ~give_webm(basename)
     # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
