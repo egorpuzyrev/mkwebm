@@ -5,6 +5,7 @@ import base64
 import tempfile
 import shlex
 import subprocess
+import glob
 
 import bottle
 from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request
@@ -161,5 +162,12 @@ def show__page_dashboard():
 def give_webm(filename):
     print('webm given', os.path.join(WEBM_CACHE_DIR, filename))
     return static_file(filename, root=WEBM_CACHE_DIR)
+
+@route('/webmslist')
+@view('webmslist')
+def show_webms_list():
+    webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.webm'))]
+    return {'webms_list': webms_list}
+
 
 application = default_app()
