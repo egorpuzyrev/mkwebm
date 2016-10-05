@@ -8,7 +8,7 @@ import subprocess
 import glob
 
 import bottle
-from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request
+from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request, run
 
 # ~VIRTENV = os.environ.get('OPENSHIFT_PYTHON_DIR', '.') + '/virtenv/'
 # ~virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
@@ -117,7 +117,7 @@ def get_params():
     proc.wait()
 
     _, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
-    command = 'mv "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
+    command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
     proc.wait()
@@ -128,7 +128,8 @@ def get_params():
             # ~yield str(line)+'<br/>'
 
 
-    basename = os.path.basename(output_tmp_file_path)
+    # ~basename = os.path.basename(output_tmp_file_path)
+    basename = os.path.basename(new_output_tmp_file_path)
     # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
     # ~command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
     # ~args = shlex.split(command)
@@ -151,9 +152,10 @@ def get_params():
     # ~print(request.headers.__dict__)
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
     # ~response.status = 302
-    response.status = 307
-    response.set_header('Location', '/webms/{}'.format(basename))
-    return response
+    # ~response.status = 302
+    # ~response.set_header('Location', '/webms/{}'.format(basename))
+    # ~return response
+    return static_file(basename, root=WEBM_CACHE_DIR)
     # ~redirect('/webms/{}'.format(basename))  # , code=302)
     # ~give_webm(basename)
     # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
@@ -177,5 +179,5 @@ def show_webms_list():
     webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.webm'))]
     return {'webms_list': webms_list}
 
-
+# ~run(reloader=True)
 application = default_app()
