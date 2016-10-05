@@ -72,11 +72,11 @@
         <form method="POST" enctype="multipart/form-data" action="/mkwebm" name="upload" onsubmit="check_form()">
             <table>
                 <tr>
-                    <td> <p> Image file: <input type="file" name="image_file" id="image_file" onchange="update_size()"></p> </td>
+                    <td> <p> Image file: <input type="file" accept="image/*" name="image_file" id="image_file" onchange="update_size()"></p> </td>
                     <td align="right"> <p> <span id="image_size_label">0</span> Kb </p> </td>
                 </tr>
                 <tr>
-                    <td> <p> Audio file: <input type="file" name="audio_file" id="audio_file" onchange="update_size()"></p> </td>
+                    <td> <p> Audio file: <input type="file" accept="audio/*" name="audio_file" id="audio_file" onchange="update_size()"></p> </td>
                     <td align="right"> <p> <span id="audio_size_label">0</span> Kb </p> </td>
                 </tr>
                 <tr>
