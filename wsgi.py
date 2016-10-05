@@ -32,9 +32,10 @@ ip = os.environ.get('OPENSHIFT_PYTHON_IP', 'localhost')
 port = int(os.environ.get('OPENSHIFT_PYTHON_PORT', 8051))
 
 # ~application.run(host=ip, port=port, server='gevent')
+application.run(server='gevent')
 
-http_server = WSGIServer((ip, port), application)
-http_server.serve_forever()
+# ~http_server = WSGIServer((ip, port), application)
+# ~http_server.serve_forever()
 #
 # Below for testing only
 #
