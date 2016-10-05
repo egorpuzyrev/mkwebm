@@ -31,14 +31,16 @@ from bottle_app import application
 ip = os.environ.get('OPENSHIFT_PYTHON_IP', 'localhost')
 port = int(os.environ.get('OPENSHIFT_PYTHON_PORT', 8051))
 
-application.run(host=ip, port=port, server='gevent')
+# ~application.run(host=ip, port=port, server='gevent')
 
+http_server = WSGIServer((ip, port), application)
+http_server.serve_forever()
 #
 # Below for testing only
 #
-if __name__ == '__main__':
-    from wsgiref.simple_server import make_server
-    httpd = make_server('localhost', 8051, application)
+# ~if __name__ == '__main__':
+    # ~from wsgiref.simple_server import make_server
+    # ~httpd = make_server('localhost', 8051, application)
     # Wait for a single request, serve it and quit.
     # ~httpd.handle_request()
-    httpd.serve_forever()
+    # ~httpd.serve_forever()
