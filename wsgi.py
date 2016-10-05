@@ -3,11 +3,9 @@ import os
 
 import gevent
 from gevent import monkey
-from gevent.wsgi import WSGIServer
+
 
 monkey.patch_all()
-
-from bottle_app import application
 
 
 virtenv = os.environ['OPENSHIFT_PYTHON_DIR'] + '/virtenv/'
@@ -24,6 +22,11 @@ try:
   exec(compiled_code, exec_namespace)
 except IOError:
   pass
+
+
+from gevent.wsgi import WSGIServer
+from bottle_app import application
+
 
 ip = os.environ.get('OPENSHIFT_PYTHON_IP', 'localhost')
 port = int(os.environ.get('OPENSHIFT_PYTHON_PORT', 8051))
