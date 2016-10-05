@@ -89,6 +89,7 @@ def get_params():
 
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     command = """{} -hide_banner \
+        -loglevel error \
         -loop 1 -i "{}" \
         -i "{}" \
         -shortest \
