@@ -150,7 +150,8 @@ def get_params():
     # ~print(response.headers.__dict__)
     # ~print(request.headers.__dict__)
     # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    response.status = 302
+    # ~response.status = 302
+    response.status = 307
     response.set_header('Location', '/webms/{}'.format(basename))
     return response
     # ~redirect('/webms/{}'.format(basename))  # , code=302)
