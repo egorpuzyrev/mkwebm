@@ -77,7 +77,8 @@ def get_params():
     try:
         size_x = request.forms.get('image_width', SIZE_X)
     except:
-        return template('<html><body>Error getting size_x</body></html>')
+        yield template('<html><body>Error getting size_x</body></html>')
+        return
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
 
@@ -92,6 +93,10 @@ def get_params():
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
     # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
     _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
+    # ~_, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
+
+    basename = os.path.basename(output_tmp_file_path)
+    new_output_tmp_file_path = os.path.join(WEBM_CACHE_DIR, basename)
 
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
@@ -116,15 +121,15 @@ def get_params():
     """.format(FFMPEG_BIN, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     args = shlex.split(command)
 
-    # ~res = subprocess.check_output(args)
+    print('start ffmpeg')
+    yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
+    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out, err = proc.communicate()
+    print(out)
+    # ~proc = subprocess.Popen(args)
+    # ~proc.wait()
 
-    # ~print('ffmpeg output:\n',res, file=sys.stderr)
-    # ~print('ffmpeg output:\n',res, file=sys.stderr)
-    # ~yield 'Start ffmpeg...'
-    proc = subprocess.Popen(args)
-    proc.wait()
 
-    _, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
     command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
@@ -137,7 +142,7 @@ def get_params():
 
 
     # ~basename = os.path.basename(output_tmp_file_path)
-    basename = os.path.basename(new_output_tmp_file_path)
+    # ~basename = os.path.basename(new_output_tmp_file_path)
     # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
     # ~command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
     # ~args = shlex.split(command)
@@ -162,8 +167,10 @@ def get_params():
     # ~response.status = 302
     response.status = 302
     response.set_header('Location', '/webms/{}'.format(basename))
-    response.set_header('Method', 'GET')
-    return response
+    # ~response.set_header('Method', 'GET')
+    # ~return response
+    # ~yield response
+    return
     # ~return static_file(basename, root=WEBM_CACHE_DIR)
     # ~redirect('/webms/{}'.format(basename))  # , code=302)
     # ~give_webm(basename)
