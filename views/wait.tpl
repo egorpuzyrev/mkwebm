@@ -26,6 +26,6 @@
 
     </head>
     <body>
-        Converting <a href="{{webm_file}}">{{webm_file}}</a>. Please wait.
+        Converting <a href="{{webm_file}}">{{webm_file}}</a>. Please wait. <b>Redirect occurs automatically.</b>
     </body>
 </html>
