@@ -38,16 +38,6 @@ WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
 
 
-def do_upload():
-    name = request.forms.name
-    data = request.files.data
-    if name and data and data.file:
-        raw = data.file.read() # This is dangerous for big files
-        filename = data.filename
-        return "Hello %s! You uploaded %s (%d bytes)." % (name, filename, len(raw))
-    return "You missed a field."
-
-
 def upload_file(src, dest):
     try:
         if name and data and data.file:
@@ -107,7 +97,7 @@ def get_params():
         -loop 1 -i "{}" \
         -i "{}" \
         -shortest \
-        -c:v libvpx-vp9 \
+        -c:v libvpx \
         -c:a libopus \
         -threads 0 \
         -crf 33 -speed 2 \
@@ -129,55 +119,11 @@ def get_params():
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
 
-
     command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
     proc.wait()
 
-    # ~with subprocess.Popen(args, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-        # ~for line in p.stdout:
-            # ~print(line, end='')
-            # ~yield str(line)+'<br/>'
-
-
-    # ~basename = os.path.basename(output_tmp_file_path)
-    # ~basename = os.path.basename(new_output_tmp_file_path)
-    # ~output_file_path = os.path.join(WEBM_CACHE_DIR, basename)
-    # ~command = 'mv {} {}'.format(output_tmp_file_path, output_file_path)
-    # ~args = shlex.split(command)
-    # ~proc = subprocess.Popen(args)
-    # ~proc.wait()
-
-    # ~print('basename:\n', basename, file=sys.stderr)
-    # ~return dict()
-    # ~return static_file(basename, root=WEBM_CACHE_DIR)
-    # ~return "<html><body>{}</body></html>".format(command)
-    # ~return "<html><body>{}</body></html>".format(res)
-    # ~return '<link href="{}" type="video/webm"/>'.format(url('webms', filename=basename))
-    # ~return '/webms/{}'.format(basename)
-    # ~print('template:\n', template('<link href="{{ url("webms", filename=basename) }}" type="video/webm"/>', url=url, basename=basename))
-    # ~return template('<html><body><link href="{{ url("webms", filename=basename) }}" type="video/webm"/></body></html>', url=url, basename=basename)
-    print('redirecting to /webms/{}'.format(basename))
-    # ~response.set_header('Location', '/webms/{}'.format(basename))
-    # ~request.set_header('Location', '/webms/{}'.format(basename))
-    # ~print(response.headers.__dict__)
-    # ~print(request.headers.__dict__)
-    # ~print('template:', '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    # ~response.status = 302
-    response.status = 302
-    response.set_header('Location', '/webms/{}'.format(basename))
-    # ~response.set_header('Method', 'GET')
-    # ~return response
-    # ~yield response
-    return
-    # ~return static_file(basename, root=WEBM_CACHE_DIR)
-    # ~redirect('/webms/{}'.format(basename))  # , code=302)
-    # ~give_webm(basename)
-    # ~return template('<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename))
-    # ~return '<html><body><video controls><source src="/webms/{}"/></video></body></html>'.format(basename)
-
-    # ~return {'url': '/webms/{}'.format(basename)}
 
 @route('/dashboard')
 @view('secure_page')
