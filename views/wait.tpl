@@ -20,7 +20,7 @@
 
             xmlhttp.send(null);
 
-            var t1 = setInterval(function(){ xmlhttp.open('GET', webm_file, true); xmlhttp.send(null);}, 30*1000)
+            var t1 = setInterval(function(){ xmlhttp.open('GET', webm_file, true); xmlhttp.send(null);}, 10*1000)
 
         </script>
 
