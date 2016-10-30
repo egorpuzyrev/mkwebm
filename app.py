@@ -33,7 +33,7 @@ sys.path.append(FFMPEG_DIR)
 FFMPEG_BIN = os.path.join(FFMPEG_DIR, 'ffmpeg')
 FFPROBE_BIN = os.path.join(FFMPEG_DIR, 'ffprobe')
 MK_SH = os.path.join(FFMPEG_DIR, 'mk.sh')
-TMP_DIR = '/tmp'
+TMP_DIR = os.path.abspath(os.environ.get('OPENSHIFT_TMP_DIR', '.'))
 WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
 
@@ -123,13 +123,18 @@ def get_params():
     command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
-    proc.wait()
+    # ~proc.wait()
 
+    command = 'rm "{}"'.format(image_tmp_file_path)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args)
+    # ~proc.wait()
 
-@route('/dashboard')
-@view('secure_page')
-def show__page_dashboard():
-    return dict(page='Dashboard', url=url)
+    command = 'rm "{}"'.format(audio_tmp_file_path)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args)
+    # ~proc.wait()
+
 
 @route('/webms/<filename:path>', name='webms')
 def give_webm(filename):
