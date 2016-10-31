@@ -37,6 +37,9 @@ TMP_DIR = os.path.abspath(os.environ.get('OPENSHIFT_TMP_DIR', '.'))
 WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
 
+GIF_LOOP_OPTIONS = """-ignore_loop 0"""
+STATIC_LOOP_OPTIONS = """-r 1 -loop 1"""
+
 
 def upload_file(src, dest):
     try:
@@ -91,12 +94,16 @@ def get_params():
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
+    if image_filename.lower().endswith('.gif'):
+        loop_options = GIF_LOOP_OPTIONS
+    else:
+        loop_options = STATIC_LOOP_OPTIONS
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
-    command = """{} -hide_banner \
+    command = """{ffmpeg} -hide_banner \
         -loglevel error \
-        -r 1 \
-        -loop 1 -i "{}" \
-        -i "{}" \
+        {loop_options} \
+        -i "{image_file}" \
+        -i "{audio_file}" \
         -shortest \
         -c:v libvpx \
         -c:a libopus \
@@ -104,12 +111,20 @@ def get_params():
         -crf 33 -speed 2 \
         -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
         -b:v 0 \
-        -vf "scale={}:trunc(ow/a/2)*2" \
+        -vf "scale={size_x}:trunc(ow/a/2)*2" \
         -pix_fmt +yuv420p \
         -f webm \
         -y \
-        "{}"
-    """.format(FFMPEG_BIN, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
+        "{output_file}"
+    """.format(
+            ffmpeg=FFMPEG_BIN,
+            loop_options=loop_options,
+            image_file=image_tmp_file_path,
+            audio_file=audio_tmp_file_path,
+            size_x=size_x,
+            output_file=output_tmp_file_path
+        )
+
     args = shlex.split(command)
 
     print('start ffmpeg')
