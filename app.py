@@ -156,7 +156,7 @@ def get_params():
     proc = subprocess.Popen(args)
     # ~proc.wait()
 
-    dump(' '.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb')))
+    dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb')))
 
 def dump(msg):
     with open(LOG_FILE, 'a', encoding='utf-8') as f:
