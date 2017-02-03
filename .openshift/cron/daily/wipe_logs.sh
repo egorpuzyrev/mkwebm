@@ -1,0 +1,1 @@
+rm -rf $OPENSHIFT_LOG_DIR/*

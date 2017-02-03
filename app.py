@@ -1,3 +1,4 @@
+
 import gevent
 from gevent import monkey
 
@@ -13,9 +14,12 @@ import tempfile
 import shlex
 import subprocess
 import glob
+import time 
 
 import bottle
 from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request, run
+
+# import asyncio
 
 # ~VIRTENV = os.environ.get('OPENSHIFT_PYTHON_DIR', '.') + '/virtenv/'
 # ~virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
@@ -40,6 +44,7 @@ SIZE_X = 400
 GIF_LOOP_OPTIONS = """-ignore_loop 0"""
 STATIC_LOOP_OPTIONS = """-r 1 -loop 1"""
 
+LOG_FILE = os.path.join(DATA_DIR, 'log.txt')
 
 def upload_file(src, dest):
     try:
@@ -108,7 +113,7 @@ def get_params():
         -c:v libvpx \
         -c:a libopus \
         -threads 0 \
-        -crf 33 -speed 2 \
+        -crf 23 -speed 2 \
         -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
         -b:v 0 \
         -vf "scale={size_x}:trunc(ow/a/2)*2" \
@@ -129,11 +134,12 @@ def get_params():
 
     print('start ffmpeg')
     yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
-    proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    out, err = proc.communicate()
-    print(out)
-    # ~proc = subprocess.Popen(args)
-    # ~proc.wait()
+    # ~proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # out, err = proc.communicate()
+    # ~print(out)
+    proc = subprocess.Popen(args)
+    # proc = asyncio.create_subprocess_exec(args)
+    proc.wait()
 
     command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
     args = shlex.split(command)
@@ -150,6 +156,11 @@ def get_params():
     proc = subprocess.Popen(args)
     # ~proc.wait()
 
+    dump(''.join(image_filename, audio_filename, output_file, str(os.stat(output_file).st_size)))
+
+def dump(msg):
+    with open(LOG_FILE, 'a') as f:
+        f.write(time.ctime() + ' ' + str(msg).encode('utf-8') + '\n')
 
 @route('/webms/<filename:path>', name='webms')
 def give_webm(filename):
