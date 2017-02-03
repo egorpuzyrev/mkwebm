@@ -85,8 +85,8 @@ def get_params():
 
     # ~conv(size_x, image_upload, audio_upload)
 
-    image_filename = image_upload.filename
-    audio_filename = audio_upload.filename
+    image_filename = str(image_upload.raw_filename)
+    audio_filename = str(audio_upload.raw_filename)
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
     # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
@@ -156,11 +156,11 @@ def get_params():
     proc = subprocess.Popen(args)
     # ~proc.wait()
 
-    dump(''.join(image_filename, audio_filename, output_file, str(os.stat(output_file).st_size)))
+    dump(' '.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb')))
 
 def dump(msg):
-    with open(LOG_FILE, 'a') as f:
-        f.write(time.ctime() + ' ' + str(msg).encode('utf-8') + '\n')
+    with open(LOG_FILE, 'a', encoding='utf-8') as f:
+        f.write(time.ctime() + ' ' + str(msg) + '\n')
 
 @route('/webms/<filename:path>', name='webms')
 def give_webm(filename):
