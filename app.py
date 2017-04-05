@@ -14,7 +14,7 @@ import tempfile
 import shlex
 import subprocess
 import glob
-import time 
+import time
 
 import bottle
 from bottle import default_app, route, get, post, static_file, request, view, url, template, redirect, response, request, run
@@ -90,7 +90,7 @@ def get_params():
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
     # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
-    _, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=TMP_DIR)
+    _, output_tmp_file_path = tempfile.mkstemp(suffix=os.path.splitext(audio_filename)[0]+'.webm',dir=TMP_DIR)
     # ~_, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
 
     basename = os.path.basename(output_tmp_file_path)
@@ -115,6 +115,7 @@ def get_params():
         -threads 0 \
         -crf 23 -speed 2 \
         -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
+        -g 9999 \
         -b:v 0 \
         -vf "scale={size_x}:trunc(ow/a/2)*2" \
         -pix_fmt +yuv420p \
