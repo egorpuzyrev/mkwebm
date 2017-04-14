@@ -79,25 +79,31 @@ def get_params():
         return
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
-
     # ~if not image_upload or not audio_upload:
         # ~return False
 
     # ~conv(size_x, image_upload, audio_upload)
 
-    image_filename = str(image_upload.raw_filename)
-    audio_filename = str(audio_upload.raw_filename)
-    # ~_, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
-    image_tmp_file_path = tempfile.mktemp(suffix=image_filename, dir=TMP_DIR)
-    # ~_, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
-    audio_tmp_file_path = tempfile.mktemp(suffix=audio_filename, dir=TMP_DIR)
+    image_filename = (image_upload.raw_filename)#.encode('utf-8')
+    # ~print("image_filename: ", image_filename, file=sys.stderr)
+    audio_filename = (audio_upload.raw_filename)#.encode('utf-8')
+    # ~print("audio_filename: ", audio_filename, file=sys.stderr)
+    image_tmp_file_path = tempfile.mkstemp(suffix=image_filename.encode('utf-8'), dir=TMP_DIR.encode('utf-8'))[1].decode()
+    # ~image_tmp_file_path = tempfile.mktemp(suffix=image_filename, dir=TMP_DIR)
+    # ~print("image_tmp_file_path: ", image_tmp_file_path, file=sys.stderr)
+    audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename.encode('utf-8'), dir=TMP_DIR.encode('utf-8'))[1].decode()
+    # ~audio_tmp_file_path = tempfile.mktemp(suffix=audio_filename, dir=TMP_DIR)
+    # ~print("audio_tmp_file_path: ", audio_tmp_file_path, file=sys.stderr)
     # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
-    # ~_, output_tmp_file_path = tempfile.mkstemp(suffix=os.path.splitext(audio_filename)[0]+'.webm',dir=TMP_DIR)
-    output_tmp_file_path = tempfile.mktemp(suffix=os.path.splitext(audio_filename)[0]+'.webm',dir=TMP_DIR)
+    output_tmp_file_path = tempfile.mkstemp(suffix=(os.path.splitext(audio_filename)[0]+'.webm').encode('utf-8'),dir=TMP_DIR.encode('utf-8'))[1].decode()
+    # ~output_tmp_file_path = tempfile.mktemp(suffix=os.path.splitext(audio_filename)[0]+b'.webm',dir=TMP_DIR)
+    # ~print("output_tmp_file_path: ", output_tmp_file_path, file=sys.stderr)
     # ~_, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
 
     basename = os.path.basename(output_tmp_file_path)
+    # ~print("basename: ", basename, file=sys.stderr)
     new_output_tmp_file_path = os.path.join(WEBM_CACHE_DIR, basename)
+    # ~print("new_output_tmp_file_path: ", basename, file=sys.stderr)
 
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
