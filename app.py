@@ -87,10 +87,10 @@ def get_params():
 
     image_filename = str(image_upload.raw_filename)
     audio_filename = str(audio_upload.raw_filename)
-    _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
-    _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
+    _, image_tmp_file_path = tempfile.mktemp(suffix=image_filename, dir=TMP_DIR)
+    _, audio_tmp_file_path = tempfile.mktemp(suffix=audio_filename, dir=TMP_DIR)
     # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
-    _, output_tmp_file_path = tempfile.mkstemp(suffix=os.path.splitext(audio_filename)[0]+'.webm',dir=TMP_DIR)
+    _, output_tmp_file_path = tempfile.mktemp(suffix=os.path.splitext(audio_filename)[0]+'.webm',dir=TMP_DIR)
     # ~_, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
 
     basename = os.path.basename(output_tmp_file_path)
