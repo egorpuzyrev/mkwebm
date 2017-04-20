@@ -15,7 +15,7 @@
                 var image_size = image_file.size/1024
                 var audio_size = audio_file.size/1024
 
-                if(image_size+audio_size>20480)
+                if(image_size+audio_size>30720)
                 {
                     alert("Суммарный размер файлов превышает допустимый!")
                     return false
@@ -55,7 +55,7 @@
 
                 document.getElementById("total_size_label").textContent = total_size.toFixed(1)
 
-                if(total_size>20480)
+                if(total_size>30720)
                 {
                     document.getElementById("total_size_label").style.color = 'red'
                 } else
@@ -68,7 +68,7 @@
     </head>
 
     <body>
-        <p><b> Суммарный объём двух файлов не более 20480 Кб </b></p>
+        <p><b> Суммарный объём двух файлов не более 30720 Кб </b></p>
         <p>Готовые файлы хранятся <s>сутки</s> двое суток.</p>
         <p>По окончании конвертации редирект на готовый файл происходит автоматически, нужно только подождать.</p>
         <p>Гифки <s>временно не</s> поддерживаются, но конвертятся очень медленно, так что проще сделать это на своей пекею</p>

@@ -120,14 +120,14 @@ def get_params():
         -i "{audio_file}" \
         -shortest \
         -c:v libvpx \
+        -threads 4 \
         -c:a libopus \
-        -threads 0 \
-        -crf 23 -speed 2 \
         -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
         -g 9999 \
         -b:v 0 \
+        -b:a 0 \
         -vf "scale={size_x}:trunc(ow/a/2)*2" \
-        -pix_fmt +yuv420p \
+        -pix_fmt yuv420p \
         -f webm \
         -y \
         "{output_file}"
