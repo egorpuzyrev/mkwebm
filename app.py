@@ -30,7 +30,7 @@ DATA_DIR = os.path.abspath(os.environ.get('OPENSHIFT_DATA_DIR', '.'))
 
 bottle.TEMPLATE_PATH.insert(0, os.path.join(PATH, 'views'))
 
-FFMPEG_DIR = os.path.join(PATH, 'ffmpeg/ffmpeg-3.2-64bit-static/')
+FFMPEG_DIR = os.path.join(PATH, 'ffmpeg/')
 
 sys.path.append(FFMPEG_DIR)
 
