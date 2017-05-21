@@ -91,5 +91,6 @@
             <input type="submit" value="Send">
         </form>
         <p> <a href="/webmslist"> List of converted webms </a> </p>
+        <p style="color:grey;font-size:13"> {{mkwebm_views_counter}} webms converted</p>
     </body>
 </html>
