@@ -92,5 +92,10 @@
         </form>
         <p> <a href="/webmslist"> List of converted webms </a> </p>
         <p style="color:grey;font-size:13"> {{mkwebm_views_counter}} webms converted</p>
+
+        <p style="color:grey;font-size:13">
+        Mailto: <a href="http://www.google.com/recaptcha/mailhide/d?k=01aPI0I1xx0AQ7rIxpelUAiQ==&amp;c=uY6EgEIYyg4kDoIk2nj1hHOzwrtWVgLoptKAAocYM_k=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\x3d01aPI0I1xx0AQ7rIxpelUAiQ\x3d\x3d\x26c\x3duY6EgEIYyg4kDoIk2nj1hHOzwrtWVgLoptKAAocYM_k\x3d', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">e...</a>@mail.ru
+        </p>
+
     </body>
 </html>
