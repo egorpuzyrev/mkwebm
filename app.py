@@ -62,8 +62,10 @@ def server_static(filename):
 @route('/')
 @view('index')
 def index():
+    with open('counter.txt') as f:
+        views_couter = f.read()
 
-    return {'mkwebm_views_counter': os.environ.get('MKWEBM_VIEWS_COUNTER')}
+    return {'mkwebm_views_counter': views_couter}
 
 @route('/mkwebm', method="POST")
 # ~@view('mkwebm')
@@ -166,7 +168,10 @@ def get_params():
     proc = subprocess.Popen(args)
     # ~proc.wait()
 
-    os.environ['MKWEBM_VIEWS_COUNTER'] = str(int(os.environ.get('MKWEBM_VIEWS_COUNTER', 0)) + 1)
+    with open('counter.txt') as f:
+        views_couter = int(f.read())
+    with open('counter.txt', 'w') as f:
+        f.write(str(views_couter+1))
 
     dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb')))
 
