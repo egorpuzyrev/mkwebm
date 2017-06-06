@@ -28,11 +28,17 @@ from bottle import default_app, route, get, post, static_file, request, view, ur
 PATH = os.path.abspath(os.environ.get('OPENSHIFT_REPO_DIR', '.'))
 DATA_DIR = os.path.abspath(os.environ.get('OPENSHIFT_DATA_DIR', '.'))
 
+SCRIPTS_DIR = os.path.join(PATH, 'scripts/')
+ANIM_SH = os.path.join(SCRIPTS_DIR, 'anim.sh')
+STATIC_SH = os.path.join(SCRIPTS_DIR, 'static.sh')
+FREE_SPACE_SH = os.path.join(SCRIPTS_DIR, 'free_space.sh')
+
 bottle.TEMPLATE_PATH.insert(0, os.path.join(PATH, 'views'))
 
 FFMPEG_DIR = os.path.join(PATH, 'ffmpeg/')
 
 sys.path.append(FFMPEG_DIR)
+sys.path.append(SCRIPTS_DIR)
 
 FFMPEG_BIN = os.path.join(FFMPEG_DIR, 'ffmpeg')
 FFPROBE_BIN = os.path.join(FFMPEG_DIR, 'ffprobe')
@@ -40,6 +46,7 @@ MK_SH = os.path.join(FFMPEG_DIR, 'mk.sh')
 TMP_DIR = os.path.abspath(os.environ.get('OPENSHIFT_TMP_DIR', '.'))
 WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
+MAX_SIZE_KB = 30720
 
 GIF_LOOP_OPTIONS = """-ignore_loop 0"""
 STATIC_LOOP_OPTIONS = """-r 1 -loop 1"""
@@ -70,7 +77,7 @@ def index():
 @route('/mkwebm', method="POST")
 # ~@view('mkwebm')
 def get_params():
-
+    begin = time.time()
     # ~params = request.params
 
     # ~size_x = request.forms.get('image_width') or SIZE_X
@@ -81,6 +88,7 @@ def get_params():
         return
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
+    total_size_kb = request.forms.get('total_size_kb', MAX_SIZE_KB)
     # ~if not image_upload or not audio_upload:
         # ~return False
 
@@ -110,42 +118,60 @@ def get_params():
     image_upload.save(image_tmp_file_path, overwrite=True)
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
+    yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
+
+    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args)
+    proc.wait()
+
     if image_filename.lower().endswith('.gif'):
-        loop_options = GIF_LOOP_OPTIONS
+        # ~loop_options = GIF_LOOP_OPTIONS
+        script_name = ANIM_SH
     else:
-        loop_options = STATIC_LOOP_OPTIONS
+        # ~loop_options = STATIC_LOOP_OPTIONS
+        script_name = STATIC_SH
+
+    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
+        script_name=script_name,
+        image_file=image_tmp_file_path,
+        audio_file=audio_tmp_file_path,
+        output_file=output_tmp_file_path,
+        new_output_tmp_file_path=new_output_tmp_file_path,
+        size_x=size_x
+    )
+
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
-    command = """{ffmpeg} -hide_banner \
-        -loglevel error \
-        {loop_options} \
-        -i "{image_file}" \
-        -i "{audio_file}" \
-        -shortest \
-        -c:v libvpx \
-        -threads 4 \
-        -c:a libopus \
-        -tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
-        -g 9999 \
-        -b:v 0 \
-        -b:a 0 \
-        -vf "scale={size_x}:trunc(ow/a/2)*2" \
-        -pix_fmt yuv420p \
-        -f webm \
-        -y \
-        "{output_file}"
-    """.format(
-            ffmpeg=FFMPEG_BIN,
-            loop_options=loop_options,
-            image_file=image_tmp_file_path,
-            audio_file=audio_tmp_file_path,
-            size_x=size_x,
-            output_file=output_tmp_file_path
-        )
+    # ~command = """{ffmpeg} -hide_banner \
+        # ~-loglevel error \
+        # ~{loop_options} \
+        # ~-i "{image_file}" \
+        # ~-i "{audio_file}" \
+        # ~-shortest \
+        # ~-c:v libvpx \
+        # ~-threads 4 \
+        # ~-c:a libopus \
+        # ~-tile-columns 6 -frame-parallel 1 -auto-alt-ref 1  -lag-in-frames 25 \
+        # ~-g 9999 \
+        # ~-b:v 0 \
+        # ~-b:a 0 \
+        # ~-vf "scale={size_x}:trunc(ow/a/2)*2" \
+        # ~-pix_fmt yuv420p \
+        # ~-f webm \
+        # ~-y \
+        # ~"{output_file}"
+    # ~""".format(
+            # ~ffmpeg=FFMPEG_BIN,
+            # ~loop_options=loop_options,
+            # ~image_file=image_tmp_file_path,
+            # ~audio_file=audio_tmp_file_path,
+            # ~size_x=size_x,
+            # ~output_file=output_tmp_file_path
+        # ~)
 
     args = shlex.split(command)
 
-    print('start ffmpeg')
-    yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
+    # ~print('start ffmpeg')
     # ~proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # out, err = proc.communicate()
     # ~print(out)
@@ -153,9 +179,9 @@ def get_params():
     # proc = asyncio.create_subprocess_exec(args)
     proc.wait()
 
-    command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
-    args = shlex.split(command)
-    proc = subprocess.Popen(args)
+    # ~command = 'mv -f "{}" "{}"'.format(output_tmp_file_path, new_output_tmp_file_path)
+    # ~args = shlex.split(command)
+    # ~proc = subprocess.Popen(args)
     # ~proc.wait()
 
     command = 'rm "{}"'.format(image_tmp_file_path)
@@ -173,7 +199,7 @@ def get_params():
     with open('counter.txt', 'w') as f:
         f.write(str(views_couter+1))
 
-    dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb')))
+    dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
 
 def dump(msg):
     with open(LOG_FILE, 'a', encoding='utf-8') as f:

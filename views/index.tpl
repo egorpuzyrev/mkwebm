@@ -52,6 +52,7 @@
                 document.getElementById("audio_size_label").textContent = audio_size.toFixed(1)
 
                 var total_size = image_size + audio_size
+                document.getElementById("total_size_kb").value = total_size
 
                 document.getElementById("total_size_label").textContent = total_size.toFixed(1)
 
@@ -87,7 +88,7 @@
                     <td align="right"> <p> Total size: <span id="total_size_label">0</span> Kb </p> </td>
                 </tr>
             </table>
-
+            <input type="hidden" name="total_size_kb" id="total_size_kb" value="">
             <input type="submit" value="Send">
         </form>
         <p> <a href="/webmslist"> List of converted webms </a> </p>
