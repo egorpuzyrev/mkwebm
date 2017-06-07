@@ -136,7 +136,7 @@ def get_params():
         # ~loop_options = STATIC_LOOP_OPTIONS
         script_name = STATIC_SH
 
-    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
+    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "{new_output_tmp_file_path}" {size_x}'.format(
         script_name=script_name,
         image_file=image_tmp_file_path,
         audio_file=audio_tmp_file_path,
