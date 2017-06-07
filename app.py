@@ -80,6 +80,7 @@ def index():
 def get_params():
     begin = time.time()
     # ~params = request.params
+    scripts_log_file = open(SCRIPTS_LOG_FILE, 'a')
 
     # ~size_x = request.forms.get('image_width') or SIZE_X
     try:
@@ -121,10 +122,11 @@ def get_params():
 
     yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
 
-    # ~command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
-    command = '{} {} &>> {SCRIPTS_LOG_FILE}'.format(FREE_SPACE_SH, total_size_kb, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
+    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    # ~command = '{} {} &>> {SCRIPTS_LOG_FILE}'.format(FREE_SPACE_SH, total_size_kb, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
-    proc = subprocess.Popen(args)
+    # ~proc = subprocess.Popen(args)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
     proc.wait()
 
     if image_filename.lower().endswith('.gif'):
@@ -134,23 +136,23 @@ def get_params():
         # ~loop_options = STATIC_LOOP_OPTIONS
         script_name = STATIC_SH
 
-    # ~command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
-        # ~script_name=script_name,
-        # ~image_file=image_tmp_file_path,
-        # ~audio_file=audio_tmp_file_path,
-        # ~output_file=output_tmp_file_path,
-        # ~new_output_tmp_file_path=new_output_tmp_file_path,
-        # ~size_x=size_x
-    # ~)
-    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x} &>> {SCRIPTS_LOG_FILE}'.format(
+    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
         script_name=script_name,
         image_file=image_tmp_file_path,
         audio_file=audio_tmp_file_path,
         output_file=output_tmp_file_path,
         new_output_tmp_file_path=new_output_tmp_file_path,
-        size_x=size_x,
-        SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE
+        size_x=size_x
     )
+    # ~command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x} &>> {SCRIPTS_LOG_FILE}'.format(
+        # ~script_name=script_name,
+        # ~image_file=image_tmp_file_path,
+        # ~audio_file=audio_tmp_file_path,
+        # ~output_file=output_tmp_file_path,
+        # ~new_output_tmp_file_path=new_output_tmp_file_path,
+        # ~size_x=size_x,
+        # ~SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE
+    # ~)
 
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
     # ~command = """{ffmpeg} -hide_banner \
@@ -186,7 +188,8 @@ def get_params():
     # ~proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # out, err = proc.communicate()
     # ~print(out)
-    proc = subprocess.Popen(args)
+    # ~proc = subprocess.Popen(args)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
     # proc = asyncio.create_subprocess_exec(args)
     proc.wait()
 
@@ -198,13 +201,15 @@ def get_params():
     # ~command = 'rm "{}"'.format(image_tmp_file_path)
     command = 'rm "{}" &>> {SCRIPTS_LOG_FILE}'.format(image_tmp_file_path, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
-    proc = subprocess.Popen(args)
+    # ~proc = subprocess.Popen(args)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
     # ~proc.wait()
 
     # ~command = 'rm "{}"'.format(audio_tmp_file_path)
     command = 'rm "{}" &>> {SCRIPTS_LOG_FILE}'.format(audio_tmp_file_path, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
-    proc = subprocess.Popen(args)
+    # ~proc = subprocess.Popen(args)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
     # ~proc.wait()
 
     with open('counter.txt') as f:
