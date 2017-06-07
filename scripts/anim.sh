@@ -4,8 +4,8 @@
 VCODEC="libvpx"
 ACODEC="libopus"
 
-FFMPEG_BIN="./ffmpeg/ffmpeg-3.2-64bit-static/ffmpeg"
-#FFMPEG_BIN="${OPENSHIFT_REPO_DIR}/ffmpeg/ffmpeg-3.2-64bit-static/ffmpeg"
+# ~FFMPEG_BIN="./ffmpeg/ffmpeg-3.2-64bit-static/ffmpeg"
+FFMPEG_BIN="${OPENSHIFT_REPO_DIR}/ffmpeg/ffmpeg"
 
 IMAGE="${1}"
 AUDIO="${2}"
