@@ -55,5 +55,5 @@ ${FFMPEG_BIN} -hide_banner \
 
 
 mv "${OUTPUT}" "${NEW_OUTPUT}" || true
-rm "${IMAGE}" || true
-rm "${AUDIO}" || true
+# ~rm "${IMAGE}" || true
+# ~rm "${AUDIO}" || true
