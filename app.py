@@ -52,6 +52,7 @@ GIF_LOOP_OPTIONS = """-ignore_loop 0"""
 STATIC_LOOP_OPTIONS = """-r 1 -loop 1"""
 
 LOG_FILE = os.path.join(DATA_DIR, 'log.txt')
+SCRIPTS_LOG_FILE = os.path.join(DATA_DIR, 'scripts_log.txt')
 
 def upload_file(src, dest):
     try:
@@ -120,7 +121,8 @@ def get_params():
 
     yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
 
-    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    # ~command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    command = '{} {} &>> {SCRIPTS_LOG_FILE}'.format(FREE_SPACE_SH, total_size_kb, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
     proc.wait()
@@ -132,13 +134,22 @@ def get_params():
         # ~loop_options = STATIC_LOOP_OPTIONS
         script_name = STATIC_SH
 
-    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
+    # ~command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x}'.format(
+        # ~script_name=script_name,
+        # ~image_file=image_tmp_file_path,
+        # ~audio_file=audio_tmp_file_path,
+        # ~output_file=output_tmp_file_path,
+        # ~new_output_tmp_file_path=new_output_tmp_file_path,
+        # ~size_x=size_x
+    # ~)
+    command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "new_output_tmp_file_path" {size_x} &>> {SCRIPTS_LOG_FILE}'.format(
         script_name=script_name,
         image_file=image_tmp_file_path,
         audio_file=audio_tmp_file_path,
         output_file=output_tmp_file_path,
         new_output_tmp_file_path=new_output_tmp_file_path,
-        size_x=size_x
+        size_x=size_x,
+        SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE
     )
 
     # ~command = '{} "{}" "{}" {} "{}"'.format(MK_SH, image_tmp_file_path, audio_tmp_file_path, size_x, output_tmp_file_path)
@@ -184,12 +195,14 @@ def get_params():
     # ~proc = subprocess.Popen(args)
     # ~proc.wait()
 
-    command = 'rm "{}"'.format(image_tmp_file_path)
+    # ~command = 'rm "{}"'.format(image_tmp_file_path)
+    command = 'rm "{}" &>> {SCRIPTS_LOG_FILE}'.format(image_tmp_file_path, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
     # ~proc.wait()
 
-    command = 'rm "{}"'.format(audio_tmp_file_path)
+    # ~command = 'rm "{}"'.format(audio_tmp_file_path)
+    command = 'rm "{}" &>> {SCRIPTS_LOG_FILE}'.format(audio_tmp_file_path, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
     args = shlex.split(command)
     proc = subprocess.Popen(args)
     # ~proc.wait()
