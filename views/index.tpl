@@ -103,15 +103,15 @@
         <form method="POST" enctype="multipart/form-data" name="upload" onsubmit="check_form()" id="files_send_form">
             <table>
                 <tr>
-                    <td> <p> Image file: <input type="file" accept="image/*" name="image_file" id="image_file" onchange="update_size()"></p> </td>
+                    <td> <p> Image file: </p></td> <td><p> <input type="file" accept="image/*" name="image_file" id="image_file" onchange="update_size()"></p> </td>
                     <td align="right"> <p> <span id="image_size_label">0</span> Kb </p> </td>
                 </tr>
                 <tr>
-                    <td> <p> Audio file: <input type="file" accept="audio/*" name="audio_file" id="audio_file" onchange="update_size()" multiple /></p> </td>
+                    <td> <p> Audio file(s): </p></td> <td><p> <input type="file" accept="audio/*" name="audio_file" id="audio_file" onchange="update_size()" multiple /></p> </td>
                     <td align="right"> <p> <span id="audio_size_label">0</span> Kb </p> </td>
                 </tr>
                 <tr>
-                    <td> <p> Video width (1-800): <input type="number" min=1 max=800 value=400 style="width: 50px" name="image_width" id="image_width"> px </p> </td>
+                    <td> <p> Video width (1-800): </p></td> <td><p> <input type="number" min=1 max=800 value=400 style="width: 50px" name="image_width" id="image_width"> px </p> </td>
                     <td align="right"> <p> Total size: <span id="total_size_label">0</span> Kb </p> </td>
                 </tr>
             </table>
