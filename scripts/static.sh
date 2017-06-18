@@ -4,7 +4,7 @@
 VCODEC="libvpx"
 ACODEC="libopus"
 
-# ~FFMPEG_BIN="./ffmpeg/ffmpeg-3.2-64bit-static/ffmpeg"
+# ~FFMPEG_BIN="./ffmpeg/ffmpeg"
 FFMPEG_BIN="${OPENSHIFT_REPO_DIR}/ffmpeg/ffmpeg"
 
 IMAGE="${1}"
@@ -31,7 +31,7 @@ ${FFMPEG_BIN} -hide_banner \
         -g 9999 \
         -b:v 450k \
         -b:a 0 \
-        -vf "scale=${WIDTH}:trunc(ow/a/2)*2" \
+        -vf "scale=${WIDTH}:trunc(ow/a/2)*2, setsar=1/1" \
         -pix_fmt yuv420p \
         -f webm \
         -y \

@@ -46,7 +46,8 @@ MK_SH = os.path.join(FFMPEG_DIR, 'mk.sh')
 TMP_DIR = os.path.abspath(os.environ.get('OPENSHIFT_TMP_DIR', '.'))
 WEBM_CACHE_DIR = os.path.join(DATA_DIR, 'mkwebm/webms/')
 SIZE_X = 400
-MAX_SIZE_KB = 30720
+# ~MAX_SIZE_KB = 30720
+MAX_SIZE_KB = 102400
 
 GIF_LOOP_OPTIONS = """-ignore_loop 0"""
 STATIC_LOOP_OPTIONS = """-r 1 -loop 1"""
@@ -94,6 +95,13 @@ def get_params():
     # ~if not image_upload or not audio_upload:
         # ~return False
 
+    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    # ~command = '{} {} &>> {SCRIPTS_LOG_FILE}'.format(FREE_SPACE_SH, total_size_kb, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
+    args = shlex.split(command)
+    # ~proc = subprocess.Popen(args)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+    proc.wait()
+
     # ~conv(size_x, image_upload, audio_upload)
 
     image_filename = (image_upload.raw_filename)#.encode('utf-8')
@@ -121,13 +129,6 @@ def get_params():
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
     yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
-
-    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
-    # ~command = '{} {} &>> {SCRIPTS_LOG_FILE}'.format(FREE_SPACE_SH, total_size_kb, SCRIPTS_LOG_FILE=SCRIPTS_LOG_FILE)
-    args = shlex.split(command)
-    # ~proc = subprocess.Popen(args)
-    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
-    proc.wait()
 
     if image_filename.lower().endswith('.gif'):
         # ~loop_options = GIF_LOOP_OPTIONS
@@ -218,6 +219,90 @@ def get_params():
         f.write(str(views_couter+1))
 
     dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
+
+
+
+@route('/mkwebms', method="POST")
+def get_params():
+    begin = time.time()
+
+    scripts_log_file = open(SCRIPTS_LOG_FILE, 'a')
+
+    try:
+        size_x = request.forms.get('image_width', SIZE_X)
+    except:
+        yield template('<html><body>Error getting size_x</body></html>')
+        return
+
+
+    image_upload = request.files.get('image_file')
+
+    audios_upload = request.files.getall('audio_file')
+
+
+    total_size_kb = request.forms.get('total_size_kb', MAX_SIZE_KB)
+
+    command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+    proc.wait()
+
+
+    image_filename = (image_upload.raw_filename)
+    _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
+
+    if image_filename.lower().endswith('.gif'):
+        script_name = ANIM_SH
+    else:
+        script_name = STATIC_SH
+
+
+    for audio_upload in audios_upload:
+        audio_filename = (audio_upload.raw_filename)
+
+        _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
+        _, output_tmp_file_path = tempfile.mkstemp(suffix=(os.path.splitext(audio_filename)[0]+'.webm'),dir=TMP_DIR)
+
+        basename = os.path.basename(output_tmp_file_path)
+        new_output_tmp_file_path = os.path.join(WEBM_CACHE_DIR, basename)
+
+        image_upload.save(image_tmp_file_path, overwrite=True)
+        audio_upload.save(audio_tmp_file_path, overwrite=True)
+
+        # ~yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
+        yield('<p>Converting <a href="{webm_file}">{webm_file}</a>. Please wait...'.format(webm_file='/webms/{}'.format(basename)))
+
+        command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "{new_output_tmp_file_path}" {size_x}'.format(
+            script_name=script_name,
+            image_file=image_tmp_file_path,
+            audio_file=audio_tmp_file_path,
+            output_file=output_tmp_file_path,
+            new_output_tmp_file_path=new_output_tmp_file_path,
+            size_x=size_x
+        )
+
+        args = shlex.split(command)
+
+        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+        proc.wait()
+
+        command = 'rm "{}"'.format(image_tmp_file_path)
+        args = shlex.split(command)
+        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+
+        command = 'rm "{}"'.format(audio_tmp_file_path)
+        args = shlex.split(command)
+        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+
+        yield(' Done</p>')
+
+        with open('counter.txt') as f:
+            views_couter = int(f.read())
+        with open('counter.txt', 'w') as f:
+            f.write(str(views_couter+1))
+
+        dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
+
 
 def dump(msg):
     with open(LOG_FILE, 'a', encoding='utf-8') as f:
