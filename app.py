@@ -220,12 +220,11 @@ def get_params():
 
     dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
 
+    scripts_log_file.close()
 
 
 @route('/mkwebms', method="POST")
 def get_params():
-    begin = time.time()
-
     scripts_log_file = open(SCRIPTS_LOG_FILE, 'a')
 
     try:
@@ -259,6 +258,8 @@ def get_params():
 
 
     for audio_upload in audios_upload:
+        begin = time.time()
+
         audio_filename = (audio_upload.raw_filename)
 
         _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
@@ -282,26 +283,27 @@ def get_params():
         )
 
         args = shlex.split(command)
-
         proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
         proc.wait()
 
-        command = 'rm "{}"'.format(image_tmp_file_path)
-        args = shlex.split(command)
-        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
-
-        command = 'rm "{}"'.format(audio_tmp_file_path)
-        args = shlex.split(command)
-        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
-
         yield(' Done</p>')
 
-        with open('counter.txt') as f:
-            views_couter = int(f.read())
-        with open('counter.txt', 'w') as f:
-            f.write(str(views_couter+1))
-
         dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
+
+    with open('counter.txt') as f:
+        views_couter = int(f.read())
+    with open('counter.txt', 'w') as f:
+        f.write(str(views_couter+len(audios_upload)))
+
+    command = 'rm "{}"'.format(image_tmp_file_path)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+
+    command = 'rm "{}"'.format(audio_tmp_file_path)
+    args = shlex.split(command)
+    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+
+    scripts_log_file.close()
 
 
 def dump(msg):
