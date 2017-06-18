@@ -250,6 +250,7 @@ def get_params():
 
     image_filename = (image_upload.raw_filename)
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
+    image_upload.save(image_tmp_file_path, overwrite=True)
 
     if image_filename.lower().endswith('.gif'):
         script_name = ANIM_SH
@@ -266,7 +267,6 @@ def get_params():
         basename = os.path.basename(output_tmp_file_path)
         new_output_tmp_file_path = os.path.join(WEBM_CACHE_DIR, basename)
 
-        image_upload.save(image_tmp_file_path, overwrite=True)
         audio_upload.save(audio_tmp_file_path, overwrite=True)
 
         # ~yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
