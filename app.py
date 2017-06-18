@@ -288,6 +288,10 @@ def get_params():
 
         yield(' Done</p>')
 
+        command = 'rm "{}"'.format(audio_tmp_file_path)
+        args = shlex.split(command)
+        proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
+
         dump('\t'.join((image_filename, audio_filename, basename, '{:.2f}'.format(os.stat(new_output_tmp_file_path).st_size/1024**2)+'Mb', str(time.time()-begin))))
 
     with open('counter.txt') as f:
@@ -296,10 +300,6 @@ def get_params():
         f.write(str(views_couter+len(audios_upload)))
 
     command = 'rm "{}"'.format(image_tmp_file_path)
-    args = shlex.split(command)
-    proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
-
-    command = 'rm "{}"'.format(audio_tmp_file_path)
     args = shlex.split(command)
     proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
 
