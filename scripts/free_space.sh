@@ -21,8 +21,8 @@ WEBMS_DIR="${OPENSHIFT_DATA_DIR}/mkwebm/webms"
 # ~DIRECTORIES=" ${OPENSHIFT_DATA_DIR} ${OPENSHIFT_TMP_DIR} ${OPENSHIFT_REPO_DIR} ${OPENSHIFT_LOG_DIR}"
 DIRECTORIES="${OPENSHIFT_HOMEDIR} ${OPENSHIFT_TMP_DIR}"
 
-TOTAL_SIZE_KB=`du -kcs ${DIRECTORIES} 2>/dev/null | tail -n1 | cut -f 1`
-SPACE_LEFT_KB=`expr ${SIZE_LIMIT_KB} - ${TOTAL_SIZE_KB}`
+TOTAL_SIZE_KB=$(du -kcs ${DIRECTORIES} 2>/dev/null | tail -n1 | cut -f 1)
+SPACE_LEFT_KB=$(expr ${SIZE_LIMIT_KB} - ${TOTAL_SIZE_KB})
 
 while [[ ${SPACE_LEFT_KB} -lt ${SIZE_NEEDED_KB} ]] && [ "$(ls -A ${WEBMS_DIR})" ]; do
 
@@ -31,7 +31,7 @@ while [[ ${SPACE_LEFT_KB} -lt ${SIZE_NEEDED_KB} ]] && [ "$(ls -A ${WEBMS_DIR})" 
     ls -tp | grep -v '/$' | tail -n ${NFILES_TO_DELETE} | xargs -d '\n' rm --
     popd
 
-    TOTAL_SIZE_KB=`du -kcs ${DIRECTORIES} 2>/dev/null | tail -n1 | cut -f 1`
-    SPACE_LEFT_KB=`expr ${SIZE_LIMIT_KB} - ${TOTAL_SIZE_KB}`
+    TOTAL_SIZE_KB=$(du -kcs ${DIRECTORIES} 2>/dev/null | tail -n1 | cut -f 1)
+    SPACE_LEFT_KB=$(expr ${SIZE_LIMIT_KB} - ${TOTAL_SIZE_KB})
 
 done;
