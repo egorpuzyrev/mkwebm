@@ -11,7 +11,7 @@
 
     # ~The data files for your database server
 
-SIZE_LIMIT_KB=$(expr 1000 \* 1024)
+SIZE_LIMIT_KB=$(expr 1000 \* 1024 - 180000)
 SIZE_NEEDED_KB=$(expr ${1} \* 3)
 NFILES_TO_DELETE=2
 
