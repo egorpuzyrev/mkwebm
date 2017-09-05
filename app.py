@@ -91,7 +91,7 @@ def get_params():
         return
     image_upload = request.files.get('image_file')
     audio_upload = request.files.get('audio_file')
-    total_size_kb = request.forms.get('total_size_kb', MAX_SIZE_KB)
+    total_size_kb = int(request.forms.get('total_size_kb', MAX_SIZE_KB))
     # ~if not image_upload or not audio_upload:
         # ~return False
 
@@ -228,7 +228,7 @@ def get_params():
     audios_upload = request.files.getall('audio_file')
 
 
-    total_size_kb = request.forms.get('total_size_kb', MAX_SIZE_KB)
+    total_size_kb = int(request.forms.get('total_size_kb', MAX_SIZE_KB))
 
     command = '{} {}'.format(FREE_SPACE_SH, total_size_kb)
     args = shlex.split(command)
