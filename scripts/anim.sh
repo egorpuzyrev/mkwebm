@@ -1,16 +1,17 @@
 #!/bin/bash
 
 # VCODEC="libvpx-vp9"
-VCODEC="libvpx"
-ACODEC="libopus"
-FILE_FORMAT="webm"
+# ~VCODEC="libvpx"
+# ~ACODEC="libopus"
+# ~FILE_FORMAT="webm"
 
 # VCODEC="libx264"
 # ACODEC="libmp3lame"
 # FILE_FORMAT="mpegts"
 
-# ~VCODEC="libxvid"
-# ~ACODEC="libmp3lame"
+VCODEC="libxvid"
+ACODEC="libmp3lame"
+FILE_FORMAT="mp4"
 # ~FILE_FORMAT="avi"
 
 # ~FFMPEG_BIN="./ffmpeg/ffmpeg"
@@ -51,7 +52,7 @@ ${FFMPEG_BIN} -hide_banner -i "${IMAGE}" -c:v ${VCODEC} -vf "setsar=1/1, scale=t
         # ~-i "movie=filename=${TMP_VIDEO}:loop=0, setpts=N/(FRAME_RATE*TB)" \
 
 ${FFMPEG_BIN} -hide_banner \
-	-f concat -safe 0 -i <(for i in {1..10000}; do printf "file '%s'\n" ${TMP_VIDEO}; done) \
+        -f concat -safe 0 -i <(for i in {1..10000}; do printf "file '%s'\n" ${TMP_VIDEO}; done) \
         -i "${AUDIO}" \
         -shortest \
         -c:v ${VCODEC} \

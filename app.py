@@ -102,23 +102,19 @@ def get_params():
     proc = subprocess.Popen(args, stdout=scripts_log_file, stderr=scripts_log_file)
     proc.wait()
 
-    # ~conv(size_x, image_upload, audio_upload)
 
     image_filename = (image_upload.raw_filename)#.encode('utf-8')
-    # ~print("image_filename: ", image_filename, file=sys.stderr)
     audio_filename = (audio_upload.raw_filename)#.encode('utf-8')
-    # ~print("audio_filename: ", audio_filename, file=sys.stderr)
     _, image_tmp_file_path = tempfile.mkstemp(suffix=image_filename, dir=TMP_DIR)
-    # ~image_tmp_file_path = tempfile.mktemp(suffix=image_filename, dir=TMP_DIR)
-    # ~print("image_tmp_file_path: ", image_tmp_file_path, file=sys.stderr)
     _, audio_tmp_file_path = tempfile.mkstemp(suffix=audio_filename, dir=TMP_DIR)
-    # ~audio_tmp_file_path = tempfile.mktemp(suffix=audio_filename, dir=TMP_DIR)
-    # ~print("audio_tmp_file_path: ", audio_tmp_file_path, file=sys.stderr)
-    # ~_, output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
-    _, output_tmp_file_path = tempfile.mkstemp(suffix=(os.path.splitext(audio_filename)[0]+'.webm'),dir=TMP_DIR)
-    # ~output_tmp_file_path = tempfile.mktemp(suffix=os.path.splitext(audio_filename)[0]+b'.webm',dir=TMP_DIR)
-    # ~print("output_tmp_file_path: ", output_tmp_file_path, file=sys.stderr)
-    # ~_, new_output_tmp_file_path = tempfile.mkstemp(suffix='.webm',dir=WEBM_CACHE_DIR)
+
+
+    if image_filename.lower().endswith('.gif'):
+        script_name = ANIM_SH
+        _, output_tmp_file_path = tempfile.mkstemp(suffix=(os.path.splitext(audio_filename)[0]+'.mp4'),dir=TMP_DIR)
+    else:
+        script_name = STATIC_SH
+        _, output_tmp_file_path = tempfile.mkstemp(suffix=(os.path.splitext(audio_filename)[0]+'.webm'),dir=TMP_DIR)
 
     basename = os.path.basename(output_tmp_file_path)
     # ~print("basename: ", basename, file=sys.stderr)
@@ -129,13 +125,6 @@ def get_params():
     audio_upload.save(audio_tmp_file_path, overwrite=True)
 
     yield template('wait.tpl', {'webm_file': '/webms/{}'.format(basename)})
-
-    if image_filename.lower().endswith('.gif'):
-        # ~loop_options = GIF_LOOP_OPTIONS
-        script_name = ANIM_SH
-    else:
-        # ~loop_options = STATIC_LOOP_OPTIONS
-        script_name = STATIC_SH
 
     command = '{script_name} "{image_file}" "{audio_file}" "{output_file}" "{new_output_tmp_file_path}" {size_x}'.format(
         script_name=script_name,
@@ -318,7 +307,7 @@ def give_webm(filename):
 @route('/webmslist')
 @view('webmslist')
 def show_webms_list():
-    webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.webm'))]
+    webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.*'))]
     return {'webms_list': webms_list}
 
 
