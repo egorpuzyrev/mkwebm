@@ -307,7 +307,7 @@ def give_webm(filename):
 @route('/webmslist')
 @view('webmslist')
 def show_webms_list():
-    webms_list = [os.path.basename(i) for i in glob.glob(os.path.join(WEBM_CACHE_DIR, '*.*'))]
+    webms_list = [os.path.basename(i) for i in sorted(glob.glob(os.path.join(WEBM_CACHE_DIR, '*.*')), key=os.path.getmtime)]
     return {'webms_list': webms_list}
 
 
