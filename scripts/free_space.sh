@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "$(date) $0"
 
     # ~Your gear’s data directory
 
@@ -23,7 +23,7 @@ DIRECTORIES="${OPENSHIFT_HOMEDIR} ${OPENSHIFT_TMP_DIR}"
 
 TOTAL_SIZE_KB=$(du -kcs ${DIRECTORIES} 2>/dev/null | tail -n1 | cut -f 1)
 SPACE_LEFT_KB=$(expr ${SIZE_LIMIT_KB} - ${TOTAL_SIZE_KB})
-
+echo "SPACE_LEFT_KB ${SPACE_LEFT_KB}"
 while [[ ${SPACE_LEFT_KB} -lt ${SIZE_NEEDED_KB} ]] && [ "$(ls -A ${WEBMS_DIR})" ]; do
 
     # ~pushd  ${WEBMS_DIR} && ls -tp | grep -v '/$' | tail -n ${NFILES_TO_DELETE} | xargs -d '\n' rm -- && popd

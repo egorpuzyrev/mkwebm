@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "$(date) $0"
 # VCODEC="libvpx-vp9"
 # ~VCODEC="libvpx"
 # ~ACODEC="libopus"
